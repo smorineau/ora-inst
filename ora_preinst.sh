@@ -20,11 +20,26 @@ df -h
 #
 echo ""
 echo "==> Checking Software Requirements"
-echo "Operating System Requirements"
+echo " * Operating System Requirements"
 cat /proc/version
-echo "Kernel Requirements"
+echo " * Kernel Requirements"
 uname -r
-echo "Package Requirements"
+echo " * Package Requirements"
+rpm -q binutils \
+compat-libcap1 \
+compat-libstdc++-33 \
+gcc \
+gcc-c++ \
+glibc \
+glibc-devel \
+ksh \
+libgcc \
+libstdc++ \
+libstdc++-devel \
+libaio \
+libaio-devel \
+make \
+sysstat
 #
 echo ""
 echo "==> Creating the Database User Accounts and Groups"
