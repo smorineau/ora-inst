@@ -3,6 +3,14 @@
 # This file has been tested on vagrant box :
 # chef/centos-6.5     (virtualbox, 1.0.0)
 #
+function isinstalled {
+  if yum list installed "$1" >/dev/null 2>&1; then
+    return 0
+  else
+    return 1
+  fi
+}
+#
 echo "********* Starting Pre-installation Tasks *********"
 #
 echo ""
@@ -25,21 +33,59 @@ cat /proc/version
 echo " * Kernel Requirements"
 uname -r
 echo " * Package Requirements"
-rpm -q binutils \
-compat-libcap1 \
-compat-libstdc++-33 \
-gcc \
-gcc-c++ \
-glibc \
-glibc-devel \
-ksh \
-libgcc \
-libstdc++ \
-libstdc++-devel \
-libaio \
-libaio-devel \
-make \
-sysstat
+#if isinstalled $package; then echo "installed"; else echo "not installed"; fi
+PACKAGES="binutils
+compat-libcap1
+compat-libstdc++-33.x86_64
+compat-libstdc++-33.i686
+gcc
+gcc-c++
+glibc.x86_64
+glibc.i686
+glibc-devel.x86_64
+glibc-devel.i686
+ksh
+libgcc.x86_64
+libgcc.i686
+libstdc++.x86_64
+libstdc++.i686
+libstdc++-devel.x86_64
+libstdc++-devel.i686
+libaio.x86_64
+libaio.i686
+libaio-devel.x86_64
+libaio-devel.i686
+make
+sysstat"
+
+for package in ${PACKAGES}
+do
+    echo "** "${package}
+    if isinstalled ${package}
+    then
+        echo "Installed"
+    else
+        echo "Not installed, installing..."
+        yum -y install ${package}
+    fi
+done
+# rpm -q binutils \
+# compat-libcap1 \
+# compat-libstdc++-33 \
+# gcc \
+# gcc-c++ \
+# glibc \
+# glibc-devel \
+# ksh \
+# libgcc \
+# libstdc++ \
+# libstdc++-devel \
+# libaio \
+# libaio-devel \
+# make \
+# sysstat
+#
+#yum -y install glibc-devel
 #
 echo ""
 echo "==> Creating the Database User Accounts and Groups"

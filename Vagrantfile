@@ -10,6 +10,11 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # please see the online documentation at vagrantup.com.
 
   # Every Vagrant virtual environment requires a box to build off of.
+  if defined?(VagrantPlugins::ProxyConf)
+      config.vm.provision :shell, inline: "echo ProxyConf plugin installed"
+      config.proxy.http     = "http://euro04.proxy.corporate.ge.com:80/"
+      config.proxy.https    = "http://euro04.proxy.corporate.ge.com:80/"
+  end
   config.vm.box = "chef/centos-6.5"
   config.vm.provision :shell, path: "ora_preinst.sh"
 
