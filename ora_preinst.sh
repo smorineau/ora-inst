@@ -11,6 +11,15 @@ function isinstalled {
   fi
 }
 #
+function AddIfNotExists {
+  if grep -Fxq "$1" "$2"
+  then
+      :
+  else
+      echo "$1" >> "$2"
+  fi
+}
+#
 echo "********* Starting Pre-installation Tasks *********"
 #
 echo ""
@@ -159,3 +168,28 @@ echo "oracle          soft    nproc           2047"  >> /etc/security/limits.con
 echo "oracle          hard    nproc           16384" >> /etc/security/limits.conf
 echo "oracle          soft    nofile          1024"  >> /etc/security/limits.conf
 echo "oracle          hard    nofile          65536" >> /etc/security/limits.conf
+
+
+FILE_TO_CHECK="/etc/pam.d/login"
+STRING_TO_ADD="session required /lib64/security/pam_limits.so"
+AddIfNotExists "${STRING_TO_ADD}" "${FILE_TO_CHECK}"
+STRING_TO_ADD="session required pam_limits.so"
+AddIfNotExists "${STRING_TO_ADD}" "${FILE_TO_CHECK}"
+FILE_TO_CHECK="/etc/profile"
+STRING_TO_ADD="if [ \$USER = \"oracle\" ]; then
+    if [ \$SHELL = \"/bin/ksh\" ]; then
+        ulimit -p 16384
+        ulimit -n 65536
+    else
+        ulimit -u 16384 -n 65536
+    fi
+fi"
+echo "${STRING_TO_ADD}" >> "${FILE_TO_CHECK}"
+
+
+#
+echo ""
+echo "==> Creating Required Directories"
+mkdir -p /u01/app/
+chown -R oracle:oinstall /u01/app/
+chmod -R 775 /u01/app/
