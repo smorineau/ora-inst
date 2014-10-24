@@ -17,6 +17,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
   config.vm.box = "chef/centos-6.5"
   config.vm.provision :shell, path: "ora_preinst.sh"
+  config.vm.provision :shell, path: "ora_inst.sh"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs

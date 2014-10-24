@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# This file has been tested on vagrant box :
+# This file has been tested as shell provisioner on vagrant box :
 # chef/centos-6.5     (virtualbox, 1.0.0)
 #
 function isinstalled {
@@ -65,7 +65,8 @@ libaio.i686
 libaio-devel.x86_64
 libaio-devel.i686
 make
-sysstat"
+sysstat
+unzip"
 
 for package in ${PACKAGES}
 do
@@ -159,16 +160,14 @@ then
     echo "Setting net.core.wmem_max=1048576"
     /sbin/sysctl -w net.core.wmem_max=1048576
 fi
-
-
-
-
-echo "Increasing ressource limits for oracle user"
+#
+echo ""
+echo "==> Setting Shell Limits for the Oracle User"
+echo "Appending in /etc/security/limits.conf ..."
 echo "oracle          soft    nproc           2047"  >> /etc/security/limits.conf
 echo "oracle          hard    nproc           16384" >> /etc/security/limits.conf
 echo "oracle          soft    nofile          1024"  >> /etc/security/limits.conf
 echo "oracle          hard    nofile          65536" >> /etc/security/limits.conf
-
 
 FILE_TO_CHECK="/etc/pam.d/login"
 STRING_TO_ADD="session required /lib64/security/pam_limits.so"
@@ -185,11 +184,28 @@ STRING_TO_ADD="if [ \$USER = \"oracle\" ]; then
     fi
 fi"
 echo "${STRING_TO_ADD}" >> "${FILE_TO_CHECK}"
-
-
 #
 echo ""
 echo "==> Creating Required Directories"
-mkdir -p /u01/app/
-chown -R oracle:oinstall /u01/app/
-chmod -R 775 /u01/app/
+ORACLE_ROOT=/u01/app/
+mkdir -p ${ORACLE_ROOT}
+chown -R oracle:oinstall ${ORACLE_ROOT}
+chmod -R 775 ${ORACLE_ROOT}
+echo "* Oracle Base Directory"
+ORACLE_BASE=${ORACLE_ROOT}/oracle
+mkdir -p ${ORACLE_BASE}
+chown -R oracle:oinstall ${ORACLE_BASE}
+chmod -R 775 ${ORACLE_BASE}
+echo "* Oracle Inventory Directory"
+ORACLE_INVENTORY=${ORACLE_ROOT}/oraInventory
+mkdir -p ${ORACLE_INVENTORY}
+chown -R oracle:oinstall ${ORACLE_INVENTORY}
+chmod -R 775 ${ORACLE_INVENTORY}
+echo "* Oracle Home Directory"
+ORACLE_HOME=${ORACLE_BASE}/product/11.2.0/dbhome_1
+mkdir -p ${ORACLE_HOME}
+chown -R oracle:oinstall ${ORACLE_HOME}
+chmod -R 775 ${ORACLE_HOME}
+#
+echo ""
+echo "==> Configuring Oracle Software Owner Environment"
