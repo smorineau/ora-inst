@@ -5,9 +5,16 @@
 #
 PATH_TO_ORA_INST_FILES=/vagrant/ora_inst_files
 cd ${PATH_TO_ORA_INST_FILES}
-unzip -o linux_11gR2_database_1of2.zip
-unzip -o linux.x64_11gR2_database_2of2.zip
+ 
+for file_to_unzip in `ls *.zip`
+do
+  unzip -o ${file_to_unzip}
+done
 
 su - oracle
 
-cat .bash_profile
+cat ${HOME}/.bash_profile
+
+${PATH_TO_ORA_INST_FILES}/database/runInstaller -silent \
+ -responseFile /vagrant/ora_11_2_db_install.rsp
+ 
