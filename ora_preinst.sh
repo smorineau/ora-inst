@@ -209,3 +209,8 @@ chmod -R 775 ${ORACLE_HOME}
 #
 echo ""
 echo "==> Configuring Oracle Software Owner Environment"
+su - oracle
+FILE_TO_CHECK=".bash_profile"
+STRING_TO_ADD="umask 022"
+AddIfNotExists "${STRING_TO_ADD}" "${FILE_TO_CHECK}"
+source .bash_profile
