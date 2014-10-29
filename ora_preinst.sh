@@ -100,11 +100,11 @@ done
 echo ""
 echo "==> Creating the Database User Accounts and Groups"
 echo "Creating user groups..."
-groupadd -g 501 oinstall
-groupadd -g 502 dba
+groupadd -g 510 oinstall
+groupadd -g 511 dba
 echo "Creating oracle software owner user"
 /usr/sbin/useradd -c 'Oracle software owner' -d /home/oracle \
-                  -g oinstall -G dba -m -u 501 -s /bin/bash oracle
+                  -g oinstall -G dba -m -u 510 -s /bin/bash oracle
 # !CAUTION! below command creates a passwordless user!
 # An actual password is to be setup manually
 passwd -f -u oracle

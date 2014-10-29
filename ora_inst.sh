@@ -5,16 +5,23 @@
 #
 PATH_TO_ORA_INST_FILES=/vagrant/ora_inst_files
 cd ${PATH_TO_ORA_INST_FILES}
- 
-for file_to_unzip in `ls *.zip`
-do
-  unzip -o ${file_to_unzip}
-done
 
-su - oracle
+if [[ -d ${PATH_TO_ORA_INST_FILES}/database ]]
+then
+  echo "Installation files already deployed."
+  echo "Proceeding..."
+else
+  for file_to_unzip in `ls *.zip`
+  do
+    unzip -o ${file_to_unzip}
+  done
+fi
 
-cat ${HOME}/.bash_profile
+#su - oracle
 
-${PATH_TO_ORA_INST_FILES}/database/runInstaller -silent \
- -responseFile /vagrant/ora_11_2_db_install.rsp
- 
+#cat ${HOME}/.bash_profile
+
+su oracle -c "${PATH_TO_ORA_INST_FILES}/database/runInstaller -silent \
+ -responseFile /vagrant/ora_11_2_db_install.rsp"
+
+echo "Completed"

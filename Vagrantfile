@@ -15,7 +15,14 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       config.proxy.http     = "http://euro04.proxy.corporate.ge.com:80/"
       config.proxy.https    = "http://euro04.proxy.corporate.ge.com:80/"
   end
+
   config.vm.box = "chef/centos-6.5"
+  #config.vm.box = "puphpet/centos65-x64"
+
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = 1024
+  end
+
   config.vm.provision :shell, path: "ora_preinst.sh"
   config.vm.provision :shell, path: "ora_inst.sh"
 
