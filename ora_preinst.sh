@@ -120,10 +120,10 @@ then
     echo "Setting fs.aio-max-nr=1048576"
     /sbin/sysctl -w fs.aio-max-nr=1048576
 fi
-if [ $(/sbin/sysctl -n fs.file-max) -lt 681574 ]
+if [ $(/sbin/sysctl -n fs.file-max) -lt 6815744 ]
 then
-    echo "Setting fs.file-max=681574"
-    /sbin/sysctl -w fs.file-max=681574
+    echo "Setting fs.file-max=6815744"
+    /sbin/sysctl -w fs.file-max=6815744
 fi
 if [ $(/sbin/sysctl -n kernel.shmall) -lt 2097152 ]
 then
@@ -187,7 +187,7 @@ echo "${STRING_TO_ADD}" >> "${FILE_TO_CHECK}"
 #
 echo ""
 echo "==> Creating Required Directories"
-ORACLE_ROOT=/u01/app/
+ORACLE_ROOT=/u01/app
 mkdir -p ${ORACLE_ROOT}
 chown -R oracle:oinstall ${ORACLE_ROOT}
 chmod -R 775 ${ORACLE_ROOT}

@@ -4,7 +4,7 @@
 # chef/centos-6.5     (virtualbox, 1.0.0)
 #
 PATH_TO_ORA_INST_FILES=/vagrant/ora_inst_files
-cd ${PATH_TO_ORA_INST_FILES}
+#cd ${PATH_TO_ORA_INST_FILES}
 
 if [[ -d ${PATH_TO_ORA_INST_FILES}/database ]]
 then
@@ -21,7 +21,23 @@ fi
 
 #cat ${HOME}/.bash_profile
 
-su oracle -c "${PATH_TO_ORA_INST_FILES}/database/runInstaller -silent \
- -responseFile /vagrant/ora_11_2_db_install.rsp"
+# Installing DB (the runInstaller must be run as oracle owner user)
+echo "Invokink Oracle Installer..."
+date
+su oracle -c "${PATH_TO_ORA_INST_FILES}/database/runInstaller -silent -noconfig -responseFile /vagrant/ora_11_2_db_install.rsp"
+date
+
+# Setting env variables
+ORACLE_ROOT=/u01/app
+ORACLE_BASE=${ORACLE_ROOT}/oracle
+export ORACLE_BASE
+ORACLE_INVENTORY=${ORACLE_ROOT}/oraInventory
+export ORACLE_INVENTORY
+ORACLE_HOME=${ORACLE_BASE}/product/11.2.0/dbhome_1
+export ORACLE_HOME
+
+echo "Running additional scripts Oracle (orainstRoot.sh and root.sh)..."
+${ORACLE_HOME}/orainstRoot.sh
+${ORACLE_HOME}/root.sh
 
 echo "Completed"
